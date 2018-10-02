@@ -2,7 +2,9 @@ import User from '../models/userModel'
 import errorfilter from '../helpers/errorFilter'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import emailSender from '../helpers/emailSender'
 
+const { sendVerification, sendWellcomeEmail } = emailSender
 const { errSignUp } = errorfilter
 
 export default {
@@ -57,6 +59,10 @@ export default {
 
     user.save()
       .then(data => {
+
+        sendWellcomeEmail(data.email, data.fname)
+        sendVerification(data.email, data.fname)
+
         res.status(201).json({
           status: 'success',
           msg: data

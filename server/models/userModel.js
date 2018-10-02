@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
+// const bcrypt = require('bcryptjs')
 
 const Schema = mongoose.Schema
 
@@ -9,7 +10,7 @@ const userSchema = new Schema({
     required: [true, 'First name required'],
     validate : {
       validator () {
-        let patt = /^[a-zA-Z]+$/
+        let patt = /^[a-zA-Z_ ]+$/
         let result = patt.test(this.fname)
         if (!result) {
           throw new Error('First name must be a character')
@@ -24,7 +25,7 @@ const userSchema = new Schema({
     validate : {
       validator () {
         if (this.lname) {
-          let patt = /^[a-zA-Z]+$/
+          let patt = /^[a-zA-Z_ ]+$/
           let result = patt.test(this.lname)
           if (!result) {
             throw new Error('Last name must be a character')
