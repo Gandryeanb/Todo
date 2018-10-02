@@ -1,0 +1,41 @@
+require('dotenv').config()
+import express from 'express'
+import mongoose from 'mongoose'
+import cors from 'cors'
+
+import userRoute from './routes/userRoute'
+
+const app = express()
+const dbTesting = null
+const dbProd = null
+const dbDev = 'mongodb://localhost/TodoDev'
+const port = process.env.HOST
+const db = mongoose.connection
+const mongooseNewParser = {useNewUrlParser: true}
+
+mongoose.set('useCreateIndex', true)
+dbTesting ? mongoose.connect(dbTesting, mongooseNewParser) 
+  : dbProd ? mongoose.connect(dbProd, mongooseNewParser)
+    : mongoose.connect(dbDev, mongooseNewParser)
+
+db
+  .on('error', console.error.bind(console, 'connection error:'))
+  .once('open', function() {
+    console.log('> DB Connected')
+  })
+
+app
+  .use(cors())
+  .use(express.json())
+  .use(express.urlencoded({extended: false}))
+  .use('/users', userRoute)
+
+  .get('/', (req, res) => {
+    res.status(200).json({
+      msg: 'Server on'
+    })
+  })
+
+  .listen(port, () => {
+    console.log(`\n> Server running on port ${port}`)
+  })
