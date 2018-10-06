@@ -14,6 +14,8 @@ const port = process.env.HOST
 const db = mongoose.connection
 const mongooseNewParser = {useNewUrlParser: true}
 
+app.use(cors())
+
 mongoose.set('useCreateIndex', true)
 dbTesting ? mongoose.connect(dbTesting, mongooseNewParser) 
   : dbProd ? mongoose.connect(dbProd, mongooseNewParser)

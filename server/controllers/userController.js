@@ -10,7 +10,8 @@ const { errSignUp } = errorfilter
 export default {
 
   loginWeb (req, res) {
-    User.find({ email: req.body.email})
+    if (req.body.email) {
+      User.find({ email: req.body.email})
       .then(data => {
         if (data.length == 1) {
           if (bcrypt.compareSync(req.body.password, data[0].password)) {
@@ -35,22 +36,67 @@ export default {
           } else {
             res.status(500).json({
               status: 'failed',
-              msg: 'Wrong password or email'
+              message: 'Wrong password or email'
             })
           }
         } else {
           res.status(404).json({
             status: 'failed',
-            msg: 'Wrong password or email'
+            message: 'Wrong password or email'
           })
         }
       })
       .catch(err => {
         res.status(500).json({
           status: 'failed',
-          msg: err.message
+          message: err.message
         })
       })
+    } else {
+      console.log(req.body.username === 'gandryeanb1')
+      User.find({ username: req.body.username})
+      .then(data => {
+        if (data.length == 1) {
+          if (bcrypt.compareSync(req.body.password, data[0].password)) {
+            if (data[0].verified === 1) {
+              let token = jwt.sign({
+                id: data[0]._id,
+                username: data[0].username,
+                fname: data[0].fname,
+                email: data[0].email
+              }, process.env.HASH_JWT)
+  
+              res.status(200).json({
+                token: token,
+                username: data[0].username
+              })
+            } else {
+              res.status(403).json({
+                status: 'failed',
+                message: 'You need to verified your account'
+              })
+            }
+          } else {
+            res.status(500).json({
+              status: 'failed',
+              message: 'Wrong password or email'
+            })
+          }
+        } else {
+          res.status(404).json({
+            status: 'failed',
+            message: 'Wrong password or email'
+          })
+        }
+      })
+      .catch(err => {
+        res.status(500).json({
+          status: 'failed',
+          message: err.message
+        })
+      })
+    }
+    
   },
 
   registerWeb (req, res) {
@@ -75,7 +121,8 @@ export default {
 
         res.status(201).json({
           status: 'success',
-          msg: data
+          message: 'creating account success, please verify your email and login',
+          data: data
         })
       })
       .catch(err => {
@@ -89,7 +136,7 @@ export default {
         }
         res.status(500).json({
           status: 'failed',
-          msg: errMsg
+          message: errMsg
         })
       })
   }
