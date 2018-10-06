@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
-// const bcrypt = require('bcryptjs')
 
 const Schema = mongoose.Schema
 
@@ -82,6 +81,7 @@ const userSchema = new Schema({
       }
     }
   },
+  taskId: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
   verified: {
     type: Number,
     default: 0

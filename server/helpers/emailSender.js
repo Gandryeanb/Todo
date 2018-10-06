@@ -15,12 +15,13 @@ const mailInit = (cb) => {
 
 export default {
 
-  sendVerification (targetEmail, fname) {
+  sendVerification (targetEmail, fname, VerifyToken) {
     mailInit(transporter => {
       const message = {
         from: String(process.env.EMAIL_SENDER),
         to: targetEmail,
         subject: "Verify your account Todo Gusti App",
+        text: `Hey ${fname}, let's verify your email to use our app`,
         html: '<p><a href=#> Verify me </a></p>'
       }
     
@@ -28,7 +29,7 @@ export default {
         if(err) {
           console.log(err)
         } else {
-          console.log(info)
+          // console.log(info)
         }
       })
     })
@@ -46,7 +47,7 @@ export default {
         if(err) {
         console.log(err)
         } else {
-        console.log(info)
+        // console.log(info)
         }
       })
     })

@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 
 import userRoute from './routes/userRoute'
+import taskRoute from './routes/taskRoute'
 
 const app = express()
 const dbTesting = null
@@ -29,6 +30,7 @@ app
   .use(express.json())
   .use(express.urlencoded({extended: false}))
   .use('/users', userRoute)
+  .use('/task', taskRoute)
 
   .get('/', (req, res) => {
     res.status(200).json({

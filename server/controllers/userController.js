@@ -14,17 +14,24 @@ export default {
       .then(data => {
         if (data.length == 1) {
           if (bcrypt.compareSync(req.body.password, data[0].password)) {
-            let token = jwt.sign({
-              id: data[0]._id,
-              username: data[0].username,
-              fname: data[0].fname,
-              email: data[0].email
-            }, process.env.HASH_JWT)
-
-            res.status(200).json({
-              token: token,
-              username: data[0].username
-            })
+            if (data[0].verified === 1) {
+              let token = jwt.sign({
+                id: data[0]._id,
+                username: data[0].username,
+                fname: data[0].fname,
+                email: data[0].email
+              }, process.env.HASH_JWT)
+  
+              res.status(200).json({
+                token: token,
+                username: data[0].username
+              })
+            } else {
+              res.status(403).json({
+                status: 'failed',
+                message: 'You need to verified your account'
+              })
+            }
           } else {
             res.status(500).json({
               status: 'failed',
@@ -60,8 +67,11 @@ export default {
     user.save()
       .then(data => {
 
+        let verifyToken = jwt.sign({
+          email: data.email
+        }, process.env.HASH_JWT)
         sendWellcomeEmail(data.email, data.fname)
-        sendVerification(data.email, data.fname)
+        sendVerification(data.email, data.fname, verifyToken)
 
         res.status(201).json({
           status: 'success',
