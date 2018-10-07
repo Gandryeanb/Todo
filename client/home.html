@@ -4,26 +4,172 @@
   <meta charset="UTF-8"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css" />
+  <link href="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.css" rel="stylesheet" type="text/css"/>
   <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
+  <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
   <title>Dashboard</title>
 </head>
-<body>
-  <div class="ui segment">
+<body style="background: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.3)), url('https://picsum.photos/1920/1080/?random')">
+  <div class="ui" style="padding:10px;">
     <div class="ui grid">
       <div class="ui three wide column">
-        <h1 style="color:teal">Todo Web App</h1>
+        <a href="./simple.html"><h1 style="color:white">Task Manager</h1></a>
+        <a href="./home.html"><h3 style="color: white;"><i class="ui list alternate icon"></i> all list</h3></a>
       </div>
       <div class="ui twelve wide column">
-
       </div>
-      <div class="ui one wide column">
-        <button class="ui teal button">
-          logout
-        </button>
+      <div class="ui one wide right aligned column" style="font-size:15px; padding-top:20px; padding-right: 20px;">
+        <a href="#">
+          <p style="color: white" onclick="logout()">Logout</p>
+        </a>
       </div>
     </div>  
   </div>
+  <div class="ui centered grid">
+    <div class="ui twelve wide column" style="margin-top: 50px;">
+      <div class="ui grid">
+        <div class="ui three wide column">
+          <div class="ui fluid  icon large button" onclick="createModal()">
+            <i class="ui plus icon"></i>
+          </div>
+          <div class="ui" style="margin-top: 20px;">
+            <div class="ui fluid vertical menu" id="sideNavCards">
+
+            </div>
+          </div>
+        </div>
+        <div class="ui ten wide column">
+          <div class="ui three cards" id="cardsStack">
+            
+          </div>
+        </div>
+        <div class="ui three wide column" style="margin-top:0px">
+          <div class="ui">
+            <p style="color: white; font-size: 80px; padding: 0px; margin: 0px;" id="detailTime"></p>
+            <div id="openWeather">
+              
+            </div>
+            <div class="ui fluid vertical menu" style="margin-top: 20px;" id="completed">
+              
+            </div>
+            <div class="ui fluid vertical menu" id="denied">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+
+  <div class="ui small modal create">
+    <div class="header">
+      <i class="ui pencil icon"></i>
+      Create a moment
+    </div>
+    <div class="ui form" style="padding: 20px;">
+      <div class="three fields">
+        <div class="field">
+          <label>Title</label>
+          <div class="ui input left icon">
+            <i class="pencil icon"></i>
+            <input type="text" id="titleCreate" placeholder="Title">
+          </div>
+        </div>
+        <div class="field">
+          <label>Priority</label>
+          <div class="ui input left icon">
+            <i class="star icon"></i>
+            <input type="text" id="priorityCreate" placeholder="Priority">
+          </div>
+        </div>
+        <div class="field">
+          <label>Due date</label>
+          <div class="ui calendar" id="dueDateCreate">
+            <div class="ui input left icon">
+              <i class="calendar icon"></i>
+              <input type="text" id="dueDaceCreateInput" placeholder="Date">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label> Description</label>
+        <div class="ui textarea">
+          <textarea id="descriptionCreate" cols="30" rows="5" placeholder="Description"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui deny button">Cancel</div>
+      <div class="ui deny teal button" onclick="create()">Create task</div>
+    </div>
+  </div>
+
+  <div class="ui tiny modal detail">
+    <div class="header">
+      <i class="ui pencil icon"></i>
+      Detail a moment
+    </div>
+    <div class="ui form" style="padding: 20px;">
+      <div class="three fields">
+        <div class="field" id="titleDetail">
+        </div>
+        <div class="field" id="priorityDetail">
+        </div>
+        <div class="field" id="dueDateDetail">
+        </div>
+      </div>
+      <div class="field" id="descriptionDetail">
+      </div>
+    </div>
+    <div class="actions" id="actionDetail">
+    </div>
+  </div>
+
+  <div class="ui tiny modal update">
+    <div class="header">
+      <i class="ui pencil icon"></i>
+      Edit a moment
+    </div>
+    <div class="ui form" style="padding: 20px;">
+      <div class="three fields">
+        <div class="field">
+          <label>Title</label>
+          <div class="ui input left icon">
+            <i class="pencil icon"></i>
+            <input type="text" id="titleUpdate" placeholder="Title">
+          </div>
+        </div>
+        <div class="field">
+          <label>Priority</label>
+          <div class="ui input left icon">
+            <i class="star icon"></i>
+            <input type="text" id="priorityUpdate" placeholder="Priority">
+          </div>
+        </div>
+        <div class="field" id="dueDateUpdate">
+          <label>Due date</label>
+          <div class="ui calendar">
+            <div class="ui input left icon">
+              <i class="calendar icon"></i>
+              <input type="text" id="dueDateUpdateInput" placeholder="Date">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label> Description</label>
+        <div class="ui textarea">
+          <textarea id="descriptionUpdate" cols="30" rows="5" placeholder="Description"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="actions" id="actionUpdate">
+    </div>
+  </div>
+
+  <script src="./src/main.js"></script>
 </body>
 </html>

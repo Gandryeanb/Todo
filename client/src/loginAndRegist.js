@@ -1,7 +1,7 @@
 $(document).ready(() => {
   let token = localStorage.getItem('token')
   if (token) {
-    window.location = './home.html'
+    window.location = './simple.html'
   }
 })
 
@@ -23,8 +23,8 @@ function login() {
     })
       .done(response => {
         localStorage.setItem('token', response.token)
-        localStorage.setItem('currentUser', response.username)
-        window.location = './home.html'
+        localStorage.setItem('currentUser', response.fname)
+        window.location = './simple.html'
       })
       .fail(err => {
         console.log(err)
@@ -42,9 +42,10 @@ function login() {
       }
     })
       .done(response => {
+        console.log(response)
         localStorage.setItem('token', response.token)
-        localStorage.setItem('currentUser', response.username)
-        window.location = './home.html'
+        localStorage.setItem('currentUser', response.fname)
+        window.location = './simple.html'
       })
       .fail(err => {
         $('#notifLogin').empty()
@@ -74,5 +75,25 @@ function regist () {
     .fail(err => {
       $('#notifRegist').empty()
       $('#notifRegist').append('* '+ err.responseJSON.message[0])
+    })
+}
+
+function loginGoogle(token) {
+  console.log('masuk')
+  $.ajax({
+    url: `${host}/users/login/google`,
+    method: 'get',
+    headers: {
+      id_token : token
+    }
+  })
+    .done(response => {
+      console.log(response)
+      localStorage.setItem('token', response.token)
+      localStorage.setItem('currentUser', response.fname)
+      window.location.href = './simple.html'
+    })
+    .fail(err => {
+      console.log(err)
     })
 }
