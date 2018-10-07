@@ -22,7 +22,7 @@ export default {
         to: targetEmail,
         subject: "Verify your account Todo Gusti App",
         text: `Hey ${fname}, let's verify your email to use our app`,
-        html: '<p><a href=#> Verify me </a></p>'
+        html: `<p><a href=http://localhost:8080/verify.html?${VerifyToken}> Verify your email </a></p>`
       }
     
       transporter.sendMail(message, function (err, info) {

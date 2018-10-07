@@ -1,9 +1,18 @@
 import User from '../models/userModel'
 import Task from '../models/taskModel'
+import sorter from '../helpers/sortByDate'
 
 export default {
 
   createTask (req, res) {
+
+    if (req.body.priority > 5) {
+      req.body.priority = 5
+    } else if ( req.body.priority < 1) {
+      req.body.priority = 1
+    } else if (req.body.priority != Number) {
+      req.body.priority = 1
+    }
 
     let data = {
       title: req.body.title,
@@ -32,6 +41,14 @@ export default {
   },
   updateTask (req, res) {
     
+    if (req.body.priority > 5) {
+      req.body.priority = 5
+    } else if ( req.body.priority < 1) {
+      req.body.priority = 1
+    } else if (req.body.priority != Number) {
+      req.body.priority = 1
+    }
+
     Task.updateOne({ _id: req.params.id, userId: req.decoded.id },{
       title: req.body.title,
       description: req.body.description,
@@ -53,7 +70,7 @@ export default {
   },
   removeTask (req, res) {
 
-    Task.removeOne({ _id: req.params.id, userId: req.decoded.id })
+    Task.deleteOne({ _id: req.params.id, userId: req.decoded.id })
       .then(data => {
         User.updateOne({ _id: req.decoded.id }, {$pull :{taskId: req.params.id}})
           .then(data => {
@@ -74,6 +91,7 @@ export default {
 
     Task.find({ userId: req.decoded.id })
       .then(data => {
+        data = sorter(data, req.params.sort)
         res.status(200).json({
           status: 'success',
           data: data
@@ -86,4 +104,20 @@ export default {
         })
       })
   },
+  solvingTask(req, res) {
+
+    Task.updateOne({ _id: req.params.id, userId: req.decoded.id }, { done: 1 })
+      .then(data => {
+        res.status(201).json({
+          status: 'success',
+          message: 'success when updating task'
+        })
+      })
+      .catch(err => {
+        res.status(500).json({
+          status: 'failed',
+          message: 'failed when updating done task'
+        })
+      })
+  }
 }
