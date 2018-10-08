@@ -29,7 +29,7 @@
     let token = window.location.search.slice(1)
 
     $.ajax({
-      url: `http://localhost:3000/users/verify/${token}`,
+      url: `https://api-todo.gandryeanb.com/users/verify/${token}`,
       method: 'get'
     })
       .done(respon => {

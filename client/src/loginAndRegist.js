@@ -5,7 +5,7 @@ $(document).ready(() => {
   }
 })
 
-let host = 'http://localhost:3000'
+let host = 'https://api-todo.gandryeanb.com'
 
 function login() {
   let usernameOrEmail = $('#emailAndUsername').val()
